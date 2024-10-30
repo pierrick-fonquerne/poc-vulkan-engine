@@ -1,0 +1,27 @@
+image: debian:latest
+
+pipelines:
+  default:
+    - step:
+        name: Build Vulkan Project on Linux
+        caches:
+          - cmake-cache
+        script:
+          # Installer les dépendances
+          - apt-get update
+          - apt-get install -y cmake libglfw3-dev libvulkan-dev g++
+
+          # Afficher les versions pour vérifier les installations
+          - cmake --version
+          - g++ --version
+          - vulkaninfo || echo "Vulkan SDK not installed"
+
+          # Configurer le build
+          - mkdir build
+          - cd build
+          - cmake ..
+          - cmake --build .
+
+definitions:
+  caches:
+    cmake-cache: ~/.cmake
